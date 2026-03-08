@@ -1,0 +1,158 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: DevMentor — AI Pair Programming Assistant Infrastructure
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: devmentor
+
+Resources:
+
+  # ─── DynamoDB Tables ───────────────────────────────────────────────
+  SessionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: devmentor-sessions
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: sessionId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: sessionId
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expirationTime
+        Enabled: true
+
+  ProgressTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: devmentor-progress
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+
+  # ─── IAM Role for Lambda ────────────────────────────────────────────
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: devmentor-lambda-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DevMentorPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - bedrock:InvokeModel
+                Resource: 'arn:aws:bedrock:*::foundation-model/anthropic.claude-sonnet-4-20250514-v1:0'
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                Resource:
+                  - !GetAtt SessionsTable.Arn
+                  - !GetAtt ProgressTable.Arn
+
+  # ─── Lambda Functions ───────────────────────────────────────────────
+  TeacherAgentFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: devmentor-teacher-agent
+      Runtime: nodejs20.x
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 60
+      MemorySize: 512
+      Environment:
+        Variables:
+          AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+      # Code: Upload via AWS CLI or console
+
+  CodeReviewerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: devmentor-code-reviewer
+      Runtime: nodejs20.x
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 60
+      MemorySize: 512
+
+  DebuggerAgentFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: devmentor-debugger-agent
+      Runtime: nodejs20.x
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 60
+      MemorySize: 512
+
+  # ─── API Gateway ────────────────────────────────────────────────────
+  DevMentorAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: DevMentorAPI
+      Description: DevMentor AI Agents API
+
+  # Allow API Gateway to invoke Lambda
+  TeacherLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref TeacherAgentFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${DevMentorAPI}/*'
+
+  # ─── S3 Bucket (static hosting) ────────────────────────────────────
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${ProjectName}-frontend-${AWS::AccountId}'
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub '${FrontendBucket.Arn}/*'
+
+Outputs:
+  SessionsTableName:
+    Value: !Ref SessionsTable
+  ProgressTableName:
+    Value: !Ref ProgressTable
+  LambdaRoleArn:
+    Value: !GetAtt LambdaExecutionRole.Arn
+  FrontendBucketName:
+    Value: !Ref FrontendBucket
+  FrontendURL:
+    Value: !GetAtt FrontendBucket.WebsiteURL

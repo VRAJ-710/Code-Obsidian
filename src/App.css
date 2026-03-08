@@ -1,0 +1,425 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Code Obsidian — App.css
+   Fonts loaded from index.html:
+   Syne (display) · Space Grotesk (body) · DM Mono (mono/code)
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Fonts */
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Space Grotesk', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+
+  /* Brand Colors */
+  --primary: #FF6B35;
+  --primary-2: #FF8C42;
+
+  /* Dark Theme variables (Default) */
+  --bg-primary: #151618;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.3);
+
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --card-bg-hover: rgba(255, 255, 255, 0.05);
+
+  --btn-secondary-border: rgba(255, 255, 255, 0.18);
+  --btn-secondary-border-hover: rgba(255, 255, 255, 0.45);
+  --hero-stroke: rgba(255, 255, 255, 0.9);
+}
+
+.light {
+  /* Light Theme variables */
+  --bg-primary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: rgba(15, 23, 42, 0.7);
+  --text-muted: rgba(15, 23, 42, 0.5);
+
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(15, 23, 42, 0.1);
+  --card-bg-hover: rgba(255, 255, 255, 1);
+
+  --btn-secondary-border: rgba(15, 23, 42, 0.2);
+  --btn-secondary-border-hover: rgba(15, 23, 42, 0.5);
+  --hero-stroke: rgba(15, 23, 42, 0.8);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Hero Typography ───────────────────────────────────────────────── */
+
+/* "AI-Powered" — small, airy, letter-spaced label */
+.hero-line-1 {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
+  /* Much smaller, sleeker */
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--primary);
+  /* Neon orange */
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  padding: 0.3em 1.2em;
+  border-radius: 100px;
+  display: inline-block;
+  margin: 0 0 1.5rem 0;
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* "Pair" — elegant stroked text */
+.hero-line-2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
+  margin: 0;
+  display: inline-block;
+  margin-right: 0.3em;
+}
+
+/* "Programming." — elegant gradient fill */
+.hero-line-3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #FF6B35 0%, #FFB347 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  display: inline-block;
+  filter: drop-shadow(0 0 25px rgba(255, 107, 53, 0.3));
+  transition: all 0.5s ease;
+}
+
+/* ── Hover Animations for "Pair Programming" ── */
+@keyframes rainbow-stroke {
+  0% {
+    filter: drop-shadow(0 0 15px rgba(255, 107, 53, 0.5)) hue-rotate(0deg);
+  }
+
+  100% {
+    filter: drop-shadow(0 0 15px rgba(255, 107, 53, 0.5)) hue-rotate(360deg);
+  }
+}
+
+@keyframes rainbow-fill {
+  0% {
+    filter: drop-shadow(0 0 25px rgba(255, 107, 53, 0.5)) hue-rotate(0deg);
+  }
+
+  100% {
+    filter: drop-shadow(0 0 25px rgba(255, 107, 53, 0.5)) hue-rotate(360deg);
+  }
+}
+
+.hero-text-group:hover .hero-line-2 {
+  -webkit-text-stroke: 1.5px #FF6B35;
+  animation: rainbow-stroke 3s linear infinite;
+}
+
+.hero-text-group:hover .hero-line-3 {
+  animation: rainbow-fill 3s linear infinite;
+}
+
+/* Subheadline */
+.hero-sub {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: clamp(0.65rem, 1.3vw, 0.8rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 2rem;
+}
+
+/* ── Stats ─────────────────────────────────────────────────────────── */
+.stat-number {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1;
+  background: linear-gradient(135deg, #FF6B35, #FF8C42);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0.4rem;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────── */
+.btn-primary {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--primary-2);
+}
+
+.btn-secondary {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--btn-secondary-border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  border-color: var(--btn-secondary-border-hover);
+  color: var(--text-primary);
+  background: var(--card-bg-hover);
+}
+
+/* ── Utility classes ───────────────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-display) !important;
+}
+
+.font-body {
+  font-family: var(--font-body) !important;
+}
+
+.font-mono {
+  font-family: var(--font-mono) !important;
+}
+
+.gradient-text {
+  background: linear-gradient(105deg, #FF6B35, #FF8C42, #FFB347);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Glass card ────────────────────────────────────────────────────── */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Universal Magic Rainbow Hover ── */
+.magic-hover-container p,
+.magic-hover-container h1,
+.magic-hover-container h2,
+.magic-hover-container h3,
+.magic-hover-container h4,
+.magic-hover-container span,
+.magic-hover-container a,
+.magic-hover-container div.stat-label,
+.magic-hover-container li {
+  transition: color 0.3s ease, text-shadow 0.3s ease, filter 0.3s ease;
+}
+
+.magic-hover-container p:not(.exclude-magic *, .exclude-magic):hover,
+.magic-hover-container h1:not(.exclude-magic *, .exclude-magic):hover,
+.magic-hover-container h2:not(.exclude-magic *, .exclude-magic):hover,
+.magic-hover-container h3:not(.exclude-magic *, .exclude-magic):hover,
+.magic-hover-container h4:not(.exclude-magic *, .exclude-magic):hover,
+.magic-hover-container span:not(.exclude-magic *, .exclude-magic, .hero-line-2, .hero-line-3):hover,
+.magic-hover-container a:not(.exclude-magic *, .exclude-magic):hover,
+.magic-hover-container div.stat-label:not(.exclude-magic *, .exclude-magic):hover,
+.magic-hover-container li:not(.exclude-magic *, .exclude-magic):hover {
+  animation: universal-rainbow 1.5s linear infinite forwards !important;
+  color: #ff6b35;
+  /* Fallback for browsers that delay animation start */
+}
+
+.magic-hover-container .gradient-text:not(.exclude-magic *, .exclude-magic):hover,
+.magic-hover-container .stat-number:not(.exclude-magic *, .exclude-magic):hover {
+  animation: gradient-rainbow 2s linear infinite forwards !important;
+  color: transparent !important;
+}
+
+@keyframes universal-rainbow {
+  0% {
+    color: #ff6b35;
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.6);
+    filter: brightness(1.1);
+  }
+
+  25% {
+    color: #f472b6;
+    text-shadow: 0 0 10px rgba(244, 114, 182, 0.6);
+    filter: brightness(1.1);
+  }
+
+  50% {
+    color: #a855f7;
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+    filter: brightness(1.1);
+  }
+
+  75% {
+    color: #3b82f6;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+    filter: brightness(1.1);
+  }
+
+  100% {
+    color: #ff6b35;
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.6);
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes gradient-rainbow {
+  0% {
+    filter: hue-rotate(0deg) drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+  }
+
+  100% {
+    filter: hue-rotate(360deg) drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+  }
+}
+
+/* ── Light Mode Tailwind Overrides ── */
+/* These rules seamlessly flip hardcoded dark mode utility classes to maintain perfect contrast */
+.light .text-white,
+.light .text-white\/80,
+.light .text-white\/90 {
+  color: var(--text-primary) !important;
+}
+
+.light .text-white\/20,
+.light .text-white\/25,
+.light .text-white\/30,
+.light .text-white\/35,
+.light .text-white\/40 {
+  color: var(--text-muted) !important;
+}
+
+.light .text-white\/50,
+.light .text-white\/60,
+.light .text-white\/70 {
+  color: var(--text-secondary) !important;
+}
+
+/* Invert Background Overlays */
+.light .bg-black\/20 {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.light .bg-black\/30 {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.light .bg-black\/40 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.light .bg-black\/60 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Invert Borders */
+.light .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.light .border-white\/8 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.light .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.light .border-white\/15 {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.light .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Invert Hovers */
+.light .hover\:text-white:hover {
+  color: var(--text-primary) !important;
+}
+
+.light .hover\:bg-white\/8:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.light .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.light .hover\:bg-white\/20:hover {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Sidebar and Topbar Overrides for hardcoded style props */
+.light [style*="rgba(0,0,0,0.55)"] {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.light [style*="rgba(0,0,0,0.5)"] {
+  background: rgba(255, 255, 255, 0.4) !important;
+}
+
+.light [style*="rgba(0,0,0,0.6)"] {
+  background: rgba(255, 255, 255, 0.6) !important;
+}
+
+.light [style*="rgba(168,85,247,0.08)"] {
+  background: rgba(168, 85, 247, 0.15) !important;
+}

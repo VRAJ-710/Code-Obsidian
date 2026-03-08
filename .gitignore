@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+dist/
+build/
+*.log
+.DS_Store
+*.pem
+deplo.sh
