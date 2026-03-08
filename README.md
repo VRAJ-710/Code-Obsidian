@@ -12,7 +12,7 @@
 
 > **Code Obsidian** is a full-stack, AI-driven cybersecurity & coding education platform that feels less like a textbook and more like a high-tech command center. Learn. Hack. Evolve.
 
-![Code Obsidian Banner](public/inventor_bg.png)
+![Code Obsidian Banner](screenshots/banner.jpeg)
 
 </div>
 
